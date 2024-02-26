@@ -1,3 +1,5 @@
+using Carter;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -8,6 +10,8 @@ builder.Services.AddSwaggerGen();
 //Agregar configuracion de CORS
 builder.Services.AddCors(options => options.AddPolicy("Academia2024", 
     policy => policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
+
+builder.Services.AddCarter();
 
 var app = builder.Build();
 
@@ -20,27 +24,9 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-List<string> nombres = ["Juan", "Pedro"];
-
 //Se hace uso de CORS definido previamente
 app.UseCors("Academia2024");
 
-app.MapGet("/nombres", () => {
-    return Results.Ok(nombres);
-}).WithTags("Nombres");
-
-app.MapPost("/nombres", (string nombre) => {
-    nombres.Add(nombre);
-    return Results.Ok(nombres);
-}).WithTags("Nombres");
-
-app.MapDelete("/nombres", (string nombre) => {
-    nombres.Remove(nombre);
-    return Results.Ok(nombres);
-}).WithTags("Nombres");
-
-app.MapGet("/mascotas", () => {
-    return Results.Ok(nombres);
-}).WithTags("Mascotas");
+app.MapCarter();
 
 app.Run();
